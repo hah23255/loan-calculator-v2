@@ -1,6 +1,6 @@
 # SoftUni Loan Calculator v2
 
-„Intorduction to AI Coding - project 1 - Loan Calculator BG v2“
+"Introduction to AI Coding - project 1 - Loan Calculator BG v2"
 
 ## Описание
 
@@ -16,9 +16,11 @@
 ## Стартиране
 
 1. Стартирайте локалния сървър:
+
    ```bash
    npm run dev
    ```
+
    Отворете показания адрес в браузъра.
 
 ## Тестове
