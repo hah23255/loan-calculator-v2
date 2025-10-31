@@ -1,4 +1,5 @@
-import {createEl,createIcon} from '../utils/dom.js';
+import {createEl,createIcon,clearEl} from '../utils/dom.js';
+import {validateLoanInputs} from '../utils/validation.js';
 
 const loanOptions=[
   {value:'mortgage',label:'🏠 Ипотечен',icon:'house'},
@@ -28,17 +29,19 @@ const ctaOptions=[
 ];
 
 export const createLoanForm=(onSubmit)=>{
-  const customFeeField=createEl('input',{type:'number',name:'customFee',step:'0.01',min:'0',placeholder:'%',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'});
-  const form=createEl('form',{className:'bg-white p-6 rounded-lg shadow-lg space-y-4'},[
-    createEl('label',{className:'block'},['💰 Сума (лв.)',createEl('input',{type:'number',name:'amount',min:'0',required:true,value:'200000',step:'1000',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
-    createEl('label',{className:'block'},['📈 Лихва (%)',createEl('input',{type:'number',name:'rate',min:'0',required:true,value:'3.2',step:'0.1',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
-    createEl('label',{className:'block'},['⏰ Месеци',createEl('input',{type:'number',name:'months',min:'1',required:true,value:'240',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
-    createEl('label',{className:'block'},['🏦 Тип кредит',selectFrom('loanType',loanOptions,'mortgage')]),
-    createEl('label',{className:'block'},['📊 План',selectFrom('plan',planOptions,'both')]),
-    createEl('label',{className:'block'},['💸 Такси',selectFrom('feeMode',feeOptions,'none')]),
+  const errorContainer=createEl('div',{className:'mb-4'});
+  const customFeeField=createEl('input',{type:'number',name:'customFee',step:'0.01',placeholder:'%',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'});
+  const form=createEl('form',{className:'bg-white p-6 rounded-lg shadow-lg space-y-4',noValidate:true},[
+    errorContainer,
+    createEl('label',{className:'block'},['💰 Сума (лв.)',createEl('input',{type:'number',name:'amount',value:'200000',step:'1000',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
+    createEl('label',{className:'block'},['📈 Лихва (%)',createEl('input',{type:'number',name:'rate',value:'3.2',step:'0.1',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
+    createEl('label',{className:'block'},['⏰ Месеци',createEl('input',{type:'number',name:'months',value:'240',className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'})]),
+    createEl('label',{className:'block'},['🏦 Тип кредит',selectFrom('loanType',loanOptions,'mortgage',false)]),
+    createEl('label',{className:'block'},['📊 План',selectFrom('plan',planOptions,'both',false)]),
+    createEl('label',{className:'block'},['💸 Такси',selectFrom('feeMode',feeOptions,'none',false)]),
     createEl('label',{className:'block'},['🎯 % Такси',customFeeField]),
-    createEl('label',{className:'block'},['ℹ️ Инфо',selectFrom('infoLevel',infoOptions,'short')]),
-    createEl('label',{className:'block'},['📢 CTA',selectFrom('ctaType',ctaOptions,'link')]),
+    createEl('label',{className:'block'},['ℹ️ Инфо',selectFrom('infoLevel',infoOptions,'short',false)]),
+    createEl('label',{className:'block'},['📢 CTA',selectFrom('ctaType',ctaOptions,'link',false)]),
     createEl('div',{className:'flex gap-4 flex-wrap'},[
       createEl('button',{type:'submit',className:'bg-primary hover:bg-accent text-white font-bold py-2 px-4 rounded transition transform hover:scale-105'},[createIcon('calculator',16),' 🚀 Изчисли']),
       createEl('button',{type:'reset',className:'bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition'},['🔄 Изчисти'])
@@ -47,13 +50,23 @@ export const createLoanForm=(onSubmit)=>{
 
   form.addEventListener('submit',evt=>{
     evt.preventDefault();
-    onSubmit(readForm(form));
+    const formData=readForm(form);
+    const errors=validateLoanInputs(formData);
+    
+    if(errors.length>0){
+      displayErrors(errorContainer,errors);
+      return;
+    }
+    
+    clearErrors(errorContainer);
+    onSubmit(formData);
   });
 
   form.addEventListener('reset',()=>{
     window.requestAnimationFrame(()=>{
       customFeeField.className='hidden';
       customFeeField.value='';
+      clearErrors(errorContainer);
       onSubmit(readForm(form));
     });
   });
@@ -70,11 +83,17 @@ export const createLoanForm=(onSubmit)=>{
     form
   ]);
 
-  onSubmit(readForm(form));
+  // Initial calculation with default values
+  const initialData=readForm(form);
+  const initialErrors=validateLoanInputs(initialData);
+  if(initialErrors.length===0){
+    onSubmit(initialData);
+  }
+  
   return section;
 };
 
-const selectFrom=(name,options,selected)=>createEl('select',{name,required:true,className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'},options.map(({value,label,icon})=>{
+const selectFrom=(name,options,selected,required=false)=>createEl('select',{name,required,className:'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary'},options.map(({value,label,icon})=>{
   const option=createEl('option',{value},[label]);
   if(value===selected)option.selected=true;
   return option;
@@ -91,3 +110,18 @@ const readForm=form=>({
   infoLevel:form.elements.infoLevel.value,
   ctaType:form.elements.ctaType.value
 });
+
+const displayErrors=(container,errors)=>{
+  clearEl(container);
+  const errorBox=createEl('div',{className:'bg-red-50 border-l-4 border-red-500 p-4 mb-4 animate-fade-in'},[
+    createEl('h3',{className:'font-bold text-red-800 mb-2'},['🚨 Опа! Нещо не е наред:']),
+    createEl('ul',{className:'list-disc list-inside space-y-1'},errors.map(err=>
+      createEl('li',{className:'text-red-700'},[err.message])
+    ))
+  ]);
+  container.appendChild(errorBox);
+};
+
+const clearErrors=container=>{
+  clearEl(container);
+};
