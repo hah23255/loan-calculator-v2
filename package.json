@@ -6,7 +6,7 @@
     "dev": "node scripts/serve.js",
     "test": "node tests/run-tests.js",
     "build-css": "tailwindcss -i src/styles/input.css -o src/styles/main.css --watch",
-    "build": "tailwindcss -i src/styles/input.css -o src/styles/main.css --minify"
+    "build": "tailwindcss -i src/styles/input.css -o src/styles/main.css --minify && cp -r src public/"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.0"
