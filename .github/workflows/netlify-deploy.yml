@@ -29,7 +29,7 @@ jobs:
           echo "✓ public/ directory verified"
 
       - name: Install Netlify CLI
-        run: npm install -g netlify-cli
+        run: npm install -g netlify-cli --silent
 
       - name: Deploy to Netlify
         run: netlify deploy --prod --dir=public
