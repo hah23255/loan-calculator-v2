@@ -29,6 +29,18 @@
 npm test
 ```
 
+## Deployment
+
+This app is automatically deployed to Netlify on every push to `master` or `main` branch via GitHub Actions.
+
+### Setup Instructions:
+1. Create a Netlify account at https://netlify.com
+2. Generate a Personal Access Token: Settings → Applications → New access token (save this)
+3. In your GitHub repo, add two secrets (Settings → Secrets and variables → Actions):
+   - `NETLIFY_AUTH_TOKEN`: your token from step 2
+   - `NETLIFY_SITE_ID`: your Netlify site id (after first deploy, find it at Site settings → Site information)
+4. Push to `master` or `main` — GitHub Actions will auto-deploy to Netlify! 🚀
+
 ## Добри практики
 
 - Поддържайте код под 300 реда.
