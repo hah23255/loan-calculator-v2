@@ -44,7 +44,7 @@ export const createLoanForm=(onSubmit)=>{
     createEl('label',{className:'block'},['📢 CTA',selectFrom('ctaType',ctaOptions,'link',false)]),
     createEl('div',{className:'flex gap-4 flex-wrap'},[
       createEl('button',{type:'submit',className:'bg-primary hover:bg-accent text-white font-bold py-2 px-4 rounded transition transform hover:scale-105'},[createIcon('calculator',16),' 🚀 Изчисли']),
-      createEl('button',{type:'reset',className:'bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition'},['🔄 Изчисли'])
+      createEl('button',{type:'reset',className:'bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition'},['🔄 Изчисти'])
     ])
   ]);
 
