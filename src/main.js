@@ -1,3 +1,4 @@
+import {createEl} from './utils/dom.js';
 import {createLoanForm} from './components/form.js';
 import {createResultsView,renderResults} from './components/results.js';
 import {calculateLoan} from './services/calculator.js';
@@ -23,5 +24,3 @@ const onFormChange=data=>{
 const formView=createLoanForm(onFormChange);
 layout.appendChild(formView);
 layout.appendChild(resultsView);
-
-function createEl(tag,attrs={},children=[]){const el=document.createElement(tag);Object.entries(attrs).forEach(([k,v])=>{if(v===undefined||v===null)return;if(k.startsWith("on")&&typeof v==="function"){el.addEventListener(k.slice(2).toLowerCase(),v);}else if(k==="className"){el.className=v;}else{el.setAttribute(k,v);}});[].concat(children).forEach(c=>{if(c===undefined||c===null)return;el.appendChild(typeof c==='string'?document.createTextNode(c):c);});return el;}
