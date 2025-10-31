@@ -14,10 +14,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Netlify
-        uses: netlify/actions/cli@master
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          args: deploy --prod --dir=public
+          node-version: '18'
+
+      - name: Verify public directory exists
+        run: |
+          if [ ! -d "public" ]; then
+            echo "Error: public/ directory not found"
+            exit 1
+          fi
+          echo "✓ public/ directory verified"
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Deploy to Netlify
+        run: netlify deploy --prod --dir=public
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
