@@ -80,31 +80,23 @@ npm test
 
 Това приложение се разгръща автоматично в Netlify при всеки push към `master` или `main` клон чрез GitHub Actions.
 
-### Инструкции за настройка:
-1. Създайте Netlify акаунт на https://netlify.com
-2. Генерирайте Personal Access Token: Settings → Applications → New access token (запазете токена)
-3. В GitHub хранилището си (`YOUR_USERNAME/YOUR_REPO_NAME`), добавете два secrets (Settings → Secrets and variables → Actions):
-   - `NETLIFY_AUTH_TOKEN`: вашият токен от стъпка 2
-   - `NETLIFY_SITE_ID`: вашият Netlify site id (намерете го в Netlify Site settings → Site information след първото разгръщане)
-4. Направете push към `master` или `main` — GitHub Actions автоматично ще разгърне в Netlify! 🚀
+### Бърз старт:
+1. Изпълнете `./scripts/encrypt-env.sh` за криптиране на Netlify токена с AES256
+2. Добавете GitHub secrets (`NETLIFY_AUTH_TOKEN` и `NETLIFY_SITE_ID`)
+3. Push към `master` или `main` — готово! 🚀
 
-### Намиране на вашия Live Site:
-След приключване на първото разгръщане, посетете https://app.netlify.com/sites за да видите URL адреса и статуса на разгръщането.
+📖 **Пълни инструкции:** Вижте `NETLIFY_QUICKSTART.md` за бърз старт или `DEPLOYMENT.md` за детайлна документация.
 
 **🇬🇧 English:**
 
 This app is automatically deployed to Netlify on every push to `master` or `main` branch via GitHub Actions.
 
-### Setup Instructions:
-1. Create a Netlify account at https://netlify.com
-2. Generate a Personal Access Token: Settings → Applications → New access token (save this)
-3. In your GitHub repository (`YOUR_USERNAME/YOUR_REPO_NAME`), add two secrets (Settings → Secrets and variables → Actions):
-   - `NETLIFY_AUTH_TOKEN`: your token from step 2
-   - `NETLIFY_SITE_ID`: your Netlify site id (find it at Netlify Site settings → Site information after first deploy)
-4. Push to `master` or `main` — GitHub Actions will auto-deploy to Netlify! 🚀
+### Quick Start:
+1. Run `./scripts/encrypt-env.sh` to encrypt Netlify token with AES256
+2. Add GitHub secrets (`NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`)
+3. Push to `master` or `main` — done! 🚀
 
-### Finding Your Live Site:
-After the first deploy completes, visit https://app.netlify.com/sites to view your site URL and deployment status.
+📖 **Full Instructions:** See `NETLIFY_QUICKSTART.md` for quick start or `DEPLOYMENT.md` for detailed documentation.
 
 ---
 
