@@ -29,10 +29,10 @@ jobs:
           echo "✓ public/ directory verified"
 
       - name: Install Netlify CLI
-        run: npm install -g netlify-cli
+        run: npm ci -g netlify-cli || npm install -g netlify-cli --silent
 
-      - name: Deploy to Netlify
-        run: netlify deploy --prod --dir=public
+      - name: Deploy to Netlify (non-interactive)
+        run: npx netlify-cli deploy --dir=public --prod --site=$NETLIFY_SITE_ID
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
